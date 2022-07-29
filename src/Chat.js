@@ -123,11 +123,9 @@ class Chat {
     switch (msgObj.type) {
       case 'join':
         msgDiv.innerHTML = `Welcome! <b>${msgObj.user}</b> has joined the room.`;
-        $(msgDiv).addClass('font-italic');
         break;
       case 'leave':
         msgDiv.innerHTML = `Bye bye! <b>${msgObj.user}</b> has left the room.`;
-        $(msgDiv).addClass('font-italic');
         break;
       case 'message':
         if (msgObj.user === this.user) {
@@ -135,12 +133,22 @@ class Chat {
             $(msgDiv).css({
               'background-color': 'whitesmoke',
             });
+            $(msgDiv).on('dblclick', event => {
+              console.log('deleted own message');
+              for (let i = 0; i < this.messages.length; ++i) {
+                if (this.messages[i] === msgDiv) {
+                  this.yArr.delete(i);
+                  break;
+                }
+              }
+            });
           };
 
           const mouseOut = event => {
             $(msgDiv).css({
               'background-color': '',
             });
+            $(msgDiv).off('dblclick');
           }
           $(msgDiv).on('mouseenter', mouseIn).on('mouseleave', mouseOut);
         }
